@@ -32,8 +32,52 @@ export default {
       ],
     };
   },
+
   methods: {
-    handle(i) {},
+    handle(i) {
+      if (!this.datas[i] && !this.winner) {
+        this.$set(this.datas, i, this.next_player);
+        this.history.push({
+          status: [...this.datas],
+          player: this.next,
+        });
+        if (this.is_win(this.next_player)) {
+          this.winner = this.next_player;
+        }
+        this.next = !this.next;
+      }
+    },
+    //跳转到第n步
+    jump(idx) {
+      this.datas = this.history[idx].status;
+      this.history.splice(idx + 1, this.history.length - idx - 1);
+      this.next = !this.history[idx].player;
+      this.winner = this.is_win("O") ? "O" : this.is_win("X") ? "X" : "";
+    },
+    //判断胜出
+    is_win(player) {
+      return this.cases.some((arr) =>
+        arr.every((el) => this.datas[el] === player)
+      );
+    },
+    //初始化
+    init() {
+      this.datas = Array(9).fill("");
+      this.history = [];
+      this.next = true;
+      this.winner = "";
+    },
+  },
+
+  computed: {
+    next_player() {
+      return this.next ? "O" : "X";
+    },
+    hint() {
+      return this.winner
+        ? "winner: " + this.winner
+        : "next: " + this.next_player;
+    },
   },
 };
 </script>
