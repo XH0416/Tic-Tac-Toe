@@ -32,6 +32,9 @@ export default {
       ],
     };
   },
+  methods: {
+    handle(i) {},
+  },
 };
 </script>
 
